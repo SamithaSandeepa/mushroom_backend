@@ -10,6 +10,7 @@ export class OfflineCheckService {
   // Runs every minute
   @Cron('*/60 * * * * *')
   async handleCron() {
+    console.log('Checking offline devices...');
     await this.firebaseService.checkOfflineDevices(60000); // threshold 60 seconds
   }
 }

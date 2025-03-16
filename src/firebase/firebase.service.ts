@@ -6,13 +6,11 @@ import { admin } from './firebase.admin';
 export class FirebaseService {
   private db = admin.database();
 
-  // Called when a heartbeat is received
   async updateDeviceHeartbeat(
     deviceId: string,
     timestamp: number,
   ): Promise<void> {
     try {
-      // Update lastHeartbeat and mark device as online
       await this.db.ref(`devices/${deviceId}`).update({
         lastHeartbeat: timestamp,
         online: true,
@@ -23,7 +21,6 @@ export class FirebaseService {
     }
   }
 
-  // Optional: Mark devices as offline if heartbeat is stale
   async checkOfflineDevices(threshold: number = 60000): Promise<void> {
     try {
       const snapshot = await this.db.ref('devices').once('value');
