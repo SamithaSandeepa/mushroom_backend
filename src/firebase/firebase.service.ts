@@ -76,4 +76,43 @@ export class FirebaseService {
       return null;
     }
   }
+
+  async updateDeviceMode(
+    deviceId: string,
+    mode: 'manual' | 'automated',
+  ): Promise<void> {
+    try {
+      await this.db.ref(`devices/${deviceId}`).update({ mode });
+      console.log(`Updated device mode for ${deviceId} to ${mode}`);
+    } catch (error) {
+      console.error('Error updating device mode:', error);
+      throw error;
+    }
+  }
+
+  async getDeviceMode(
+    deviceId: string,
+  ): Promise<'manual' | 'automated' | null> {
+    try {
+      const snapshot = await this.db
+        .ref(`devices/${deviceId}/mode`)
+        .once('value');
+      return snapshot.val();
+    } catch (error) {
+      console.error('Error getting device mode:', error);
+      return null;
+    }
+  }
+
+  async isDeviceOnline(deviceId: string): Promise<boolean> {
+    try {
+      const snapshot = await this.db
+        .ref(`devices/${deviceId}/online`)
+        .once('value');
+      return snapshot.val();
+    } catch (error) {
+      console.error('Error checking device online status:', error);
+      return false;
+    }
+  }
 }

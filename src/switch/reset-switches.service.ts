@@ -15,13 +15,15 @@ export class ResetSwitchesService implements OnModuleInit {
     const devices = await this.firebaseService.getAllDevices();
     if (devices) {
       for (const deviceId in devices) {
-        // Reset switches for the device in Firebase and mark serverReset
-        await this.firebaseService.resetDeviceSwitches(deviceId);
-        // Publish MQTT messages for each switch so that the device is notified
-        for (let switchId = 1; switchId <= 4; switchId++) {
-          const topic = `switch/${switchId}/${deviceId}`;
-          this.mqttService.publish(topic, 'off');
-          console.log(`Published reset message on ${topic}`);
+        const mode = devices[deviceId].mode;
+        // Only reset if in manual mode
+        if (mode === 'manual') {
+          await this.firebaseService.resetDeviceSwitches(deviceId);
+          for (let switchId = 1; switchId <= 4; switchId++) {
+            const topic = `switch/${switchId}/${deviceId}`;
+            this.mqttService.publish(topic, 'off');
+            console.log(`Published reset message on ${topic}`);
+          }
         }
       }
     } else {

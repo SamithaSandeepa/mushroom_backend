@@ -19,6 +19,19 @@ export class SwitchService {
     if (switchId < 1 || switchId > 4) {
       throw new HttpException('Invalid switch ID', HttpStatus.BAD_REQUEST);
     }
+    // Ensure device is online
+    const online = await this.firebaseService.isDeviceOnline(deviceId);
+    if (!online) {
+      throw new HttpException('Device is offline', HttpStatus.BAD_REQUEST);
+    }
+    // Ensure device is in manual mode
+    const mode = await this.firebaseService.getDeviceMode(deviceId);
+    if (mode !== 'manual') {
+      throw new HttpException(
+        'Switch control allowed only in manual mode',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     // Construct the topic: e.g., "switch/1/{deviceId}"
     const topic = `switch/${switchId}/${deviceId}`;
     // Set payload as "on" or "off" (you could also send JSON)

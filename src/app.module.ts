@@ -8,6 +8,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { OfflineCheckService } from './firebase/offline-check.service';
 import { SwitchModule } from './switch/switch.module';
 import { ResetSwitchesService } from './switch/reset-switches.service';
+import { DeviceModeModule } from './device-mode/device-mode.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ResetSwitchesService } from './switch/reset-switches.service';
     MqttModule,
     FirebaseModule,
     SwitchModule,
+    DeviceModeModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
