@@ -37,4 +37,43 @@ export class FirebaseService {
       console.error('Error checking offline devices:', error);
     }
   }
+
+  async updateSwitchStatus(
+    deviceId: string,
+    switchId: number,
+    status: boolean,
+  ): Promise<void> {
+    try {
+      await this.db.ref(`devices/${deviceId}/switches/${switchId}`).set(status);
+      console.log(
+        `Updated switch ${switchId} for device ${deviceId} to ${status ? 'on' : 'off'}`,
+      );
+    } catch (error) {
+      console.error('Error updating switch status:', error);
+      throw error;
+    }
+  }
+
+  async resetDeviceSwitches(deviceId: string): Promise<void> {
+    try {
+      await this.db.ref(`devices/${deviceId}`).update({
+        switches: { 1: false, 2: false, 3: false, 4: false },
+        serverReset: true,
+      });
+      console.log(`Reset switches for device ${deviceId}`);
+    } catch (error) {
+      console.error('Error resetting switches for device', deviceId, error);
+      throw error;
+    }
+  }
+
+  async getAllDevices(): Promise<any> {
+    try {
+      const snapshot = await this.db.ref('devices').once('value');
+      return snapshot.val();
+    } catch (error) {
+      console.error('Error fetching devices:', error);
+      return null;
+    }
+  }
 }

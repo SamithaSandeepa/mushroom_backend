@@ -6,10 +6,18 @@ import { AuthModule } from './auth/auth.module';
 import { MqttModule } from './mqtt/mqtt.module';
 import { FirebaseModule } from './firebase/firebase.module';
 import { OfflineCheckService } from './firebase/offline-check.service';
+import { SwitchModule } from './switch/switch.module';
+import { ResetSwitchesService } from './switch/reset-switches.service';
 
 @Module({
-  imports: [AuthModule, MqttModule, FirebaseModule, ScheduleModule.forRoot()],
+  imports: [
+    AuthModule,
+    MqttModule,
+    FirebaseModule,
+    SwitchModule,
+    ScheduleModule.forRoot(),
+  ],
   controllers: [AppController],
-  providers: [AppService, OfflineCheckService],
+  providers: [AppService, OfflineCheckService, ResetSwitchesService],
 })
 export class AppModule {}
